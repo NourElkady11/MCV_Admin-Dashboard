@@ -1,0 +1,43 @@
+﻿
+@model Department
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create New department</h1>
+
+<form asp-action="Create">
+@*     <div class="text-danger" asp-validation-summary="All" ></div>  
+ *@<div>
+        <label asp-for="Code"></label>
+        <input class="form-control" asp-for="Code"></input>
+        <span class="text-danger" asp-validation-for="Code"></span>
+    </div> 
+
+    <div>
+        <label asp-for="Name"></label>
+        <input class="form-control" asp-for="Name"></input>
+        <span class="text-danger" asp-validation-for="Name"></span>
+
+    </div>  
+    
+    <div>
+        <label asp-for="DateTime"></label>
+        <input class="form-control" asp-for="DateTime"></input>
+        <span class="text-danger" asp-validation-for="DateTime"></span>
+
+    </div>
+    <div>
+        <button class="btn btn-success" type="submit">Submit</button>
+        <a class="btn btn-danger" asp-action="Index">Cancel</a>
+    </div>
+  
+
+</form>
+
+@section Validation {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+
