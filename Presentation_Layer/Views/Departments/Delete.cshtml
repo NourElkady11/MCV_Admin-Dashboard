@@ -7,27 +7,12 @@
 <h1>Are you sure you want to delete that Department </h1>
 
 
-<form action="Delete" method="post">
+<form asp-action="Delete">
     <div class="text-danger" asp-validation-summary="All"></div>
-    <div>
         <input hidden asp-for="Id"/>
-    </div>
-    <div>
-        <label asp-for="Code"></label>
-      <input readonly class="form-control" asp-for="Code"></input> 
-    </div>
 
-    <div>
-        <label asp-for="Name"></label>
-        <input readonly class="form-control" asp-for="Name"></input>
+        <partial name="DPartial_View/Details_Delete_Partial"></partial>
 
-    </div>
-
-    <div>
-        <label asp-for="DateTime"></label>
-        <input readonly class="form-control" asp-for="DateTime"></input>
-
-    </div>
     <div>
         <button class="btn btn-success" type="submit">Yes</button>
         <a class="btn btn-danger" asp-action="Index">No</a>
