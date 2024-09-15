@@ -5,7 +5,12 @@
 
 }
 <div>
-    <a class="btn btn-primary mt-3" asp-action="Create">Add New Employee</a>
+@*     <h1>@ViewData["message"]</h1>*@ 
+
+<h1 class="alert-success">@TempData["Message"]</h1>
+<h1 class="alert-success">@TempData["Message2"]</h1>
+
+<a class="btn btn-primary mt-3" asp-action="Create">Add New Employee</a>
 </div>
 @if (Model.Any())
 {

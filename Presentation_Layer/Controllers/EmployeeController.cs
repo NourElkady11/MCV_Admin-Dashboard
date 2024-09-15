@@ -14,6 +14,8 @@ namespace Presentation_Layer.Controllers
         }
         public IActionResult Index()
         {
+            /*            ViewData["message"] = "Hello ya zmiksy";*/
+            ViewBag.Message = "Hello from Bag";
             var Employees = employeeRepoistory.GetAll();
             return View(Employees);
         }
@@ -58,7 +60,11 @@ namespace Presentation_Layer.Controllers
             {
                 try
                 {
-                    employeeRepoistory.Update(Employee);
+                    if (employeeRepoistory.Update(Employee) > 0)
+                    {
+                        TempData["Message"] = "Employee updated";
+                    }
+                   
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -80,7 +86,11 @@ namespace Presentation_Layer.Controllers
 
             try
             {
-                employeeRepoistory.Delete(Employee);
+                if (employeeRepoistory.Delete(Employee) > 0)
+                {
+                    TempData["Message2"] = "Employee Deleted";
+                }
+               
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
