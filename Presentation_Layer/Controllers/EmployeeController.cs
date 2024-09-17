@@ -1,42 +1,73 @@
-﻿using BusniussLogic_Layer.Repositories;
+﻿using AutoMapper;
+using BusniussLogic_Layer.Repositories;
 using DataAccess_Layer.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Presentation_Layer.Utilities;
+using Presentation_Layer.ViewModels;
 
 namespace Presentation_Layer.Controllers
 {
     public class EmployeeController : Controller
     {
-        private IEmployeeRepoistory employeeRepoistory;
+   
+        private readonly IMapper mapper;
+        private readonly IUnitOfWork unitOfWork;
 
-        public EmployeeController(IEmployeeRepoistory employeeRepoistory)
+        public EmployeeController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            this.employeeRepoistory = employeeRepoistory;
+            this.unitOfWork = unitOfWork;
+            this.mapper= mapper;
         }
-        public IActionResult Index()
+        public IActionResult Index(string searchValue)
         {
-            /*            ViewData["message"] = "Hello ya zmiksy";*/
-            ViewBag.Message = "Hello from Bag";
-            var Employees = employeeRepoistory.GetAll();
-            return View(Employees);
+            if (string.IsNullOrWhiteSpace(searchValue))
+            {
+
+                  var Employees = unitOfWork.Employees.GetAllWithDepartment();
+                  var EmployeeVM = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(Employees);
+                  return View(EmployeeVM);
+            }
+            else
+            {
+                var employees = unitOfWork.Employees.GetAllEmployees(searchValue);
+                var EmployeeVM = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
+                return View(EmployeeVM);
+
+            }
         }
 
 
         public IActionResult Create()
         {
+
+            var departments= unitOfWork.Departments.GetAll();
+            SelectList listItems = new SelectList(departments,"Id","Name");
+            ViewBag.departments=listItems;
+            //this (Id)=>DataValue filed we will send it to the view
             return View();
         }
 
 
         [HttpPost]
-        public IActionResult Create(Employee Employee)
+        public IActionResult Create(EmployeeViewModel EmployeeViewModel)
         {
+            if (EmployeeViewModel.Image is not null)
+            {
+                EmployeeViewModel.ImageName=DocumentSetting.uploadFile(EmployeeViewModel.Image, "Images");
+            }
+            var employee = mapper.Map<EmployeeViewModel, Employee>(EmployeeViewModel);
+
+
             if (!ModelState.IsValid)
             {
-                return View(Employee);
+                return View(EmployeeViewModel);
             }
             else
             {
-                employeeRepoistory.Create(Employee);
+               
+                unitOfWork.Employees.Create(employee);
+                unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -50,17 +81,25 @@ namespace Presentation_Layer.Controllers
 
         public IActionResult Edit(int? id) => EditandDelete(id, nameof(Edit));
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Edit([FromForm] int id, Employee Employee)
+        public IActionResult Edit([FromForm] int id, EmployeeViewModel EmployeeViewModel)
         {
-            if (id != Employee.Id)
+            if (id != EmployeeViewModel.Id)
             {
                 return BadRequest();
             }
+
+            if (EmployeeViewModel.Image is not null)
+            {
+                EmployeeViewModel.ImageName = DocumentSetting.uploadFile(EmployeeViewModel.Image, "Images");
+            }
+      
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (employeeRepoistory.Update(Employee) > 0)
+                    var employee = mapper.Map<EmployeeViewModel, Employee>(EmployeeViewModel);
+                    unitOfWork.Employees.Update(employee);
+                    if (unitOfWork.SaveChanges()>0)
                     {
                         TempData["Message"] = "Employee updated";
                     }
@@ -74,21 +113,28 @@ namespace Presentation_Layer.Controllers
 
             }
 
-            return View(Employee);
+            return View(EmployeeViewModel);
         }
 
 
         public IActionResult Delete(int? id) => EditandDelete(id, nameof(Delete));
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Delete(Employee Employee)
+        public IActionResult Delete(EmployeeViewModel Employee_View_Model)
         {
-
+            if (Employee_View_Model.ImageName is not null)
+            {
+                DocumentSetting.DeleteFile("Images", Employee_View_Model.ImageName);
+            }
             try
             {
-                if (employeeRepoistory.Delete(Employee) > 0)
+                var employee = mapper.Map<EmployeeViewModel, Employee>(Employee_View_Model);
+                unitOfWork.Employees.Delete(employee);
+                unitOfWork.SaveChanges();
+                if (unitOfWork.SaveChanges() > 0)
                 {
                     TempData["Message2"] = "Employee Deleted";
+                  
                 }
                
                 return RedirectToAction(nameof(Index));
@@ -98,7 +144,7 @@ namespace Presentation_Layer.Controllers
                 ModelState.AddModelError("", ex.Message);
             }
 
-            return View(Employee);
+            return View(Employee_View_Model);
 
 
         }
@@ -107,10 +153,18 @@ namespace Presentation_Layer.Controllers
 
         private IActionResult EditandDelete(int? id, string viewname)
         {
+            if (viewname == nameof(Edit))
+            {
+                var departments = unitOfWork.Departments.GetAll();
+                SelectList listItems = new SelectList(departments, "Id", "Name");
+                //this (Id)=>DataValue filed we will send it to the view and set as departmentId
+                ViewBag.departmetns = listItems;
+            }
             if (!id.HasValue) return BadRequest();
-            var dept = employeeRepoistory.Get(id.Value);
-            if (dept is null) return NotFound();
-            return View(viewname, dept);
+            var employee = unitOfWork.Employees.Get(id.Value);
+            if (employee is null) return NotFound();
+            var EmployeeVM  = mapper.Map<Employee,EmployeeViewModel>(employee);
+            return View(viewname, EmployeeVM);
         }
 
     }

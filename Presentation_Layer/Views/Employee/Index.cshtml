@@ -1,16 +1,21 @@
-﻿
-@model IEnumerable<Employee>
+﻿@model IEnumerable<EmployeeViewModel>
 @{
     ViewData["Title"] = "Index";
 
 }
 <div>
-@*     <h1>@ViewData["message"]</h1>*@ 
+    <h1 class="alert-success">@TempData["Message"]</h1>
+    <h1 class="alert-success">@TempData["Message2"]</h1>
+    <div>
+        <a class="btn btn-primary mt-3" asp-action="Create">Add New Employee</a>
+    </div>
+    <div class="mt-2">
+        <form method="get" class="row" asp-action="Index">
+            <div class="col-10"><input placeholder="Employee Name" type="text" class="form-control" name="searchValue" required></input></div>
+            <div class="col-2"><button class="btn btn-info" type="submit" value="search">Search</button></div>
+        </form>
 
-<h1 class="alert-success">@TempData["Message"]</h1>
-<h1 class="alert-success">@TempData["Message2"]</h1>
-
-<a class="btn btn-primary mt-3" asp-action="Create">Add New Employee</a>
+    </div>
 </div>
 @if (Model.Any())
 {
@@ -18,11 +23,14 @@
     <table class="table table-striped table-hover ">
         <thead>
             <tr>
+                <td>@Html.DisplayNameFor(d=>d.Image)</td>
                 <td>@Html.DisplayNameFor(d => d.Name)</td>
                 <td>@Html.DisplayNameFor(d => d.Age)</td>
                 <td>@Html.DisplayNameFor(d => d.Salary)</td>
+                <td>@Html.DisplayNameFor(d => d.Department)</td>
                 <td>@Html.DisplayNameFor(d => d.Email)</td>
                 <td>@Html.DisplayNameFor(d => d.phone)</td>
+                <td>@Html.DisplayNameFor(d => d.address)</td>
                 <td>@Html.DisplayNameFor(d => d.IsActive)</td>
          
 
@@ -35,12 +43,15 @@
             @foreach (var item in Model)
             {
                 <tr>
-                 
+
+                    <td><img src="~/Files/Images/@item.ImageName" height="75" width="75" class="rounded"></img></td>
                     <td>@item.Name</td>
                     <td>@item.Age</td>
                     <td>@Html.DisplayFor(e=>item.Salary)</td>
+                    <td>@item.Department?.Name</td>
                     <td>@Html.DisplayFor(e=>item.Email)</td>
                     <td>@Html.DisplayFor(e=>item.phone)</td>
+                    <td>@item.address</td>
                     <td>
                     @if(@item.IsActive){
                         <i class="fa-solid fa-circle" style="color:green"></i>

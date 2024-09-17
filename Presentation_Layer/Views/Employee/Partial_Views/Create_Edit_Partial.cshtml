@@ -1,8 +1,8 @@
-﻿@model Employee
+﻿@model EmployeeViewModel
 
+ <div class="text-danger" asp-validation-summary="All"></div> 
 
-@* <div class="text-danger" asp-validation-summary="All"></div> *@
-
+ 
 <div class="form-group">
     <label asp-for="Name" class="control-label"></label>
     <input asp-for="Name" class="form-control" />
@@ -26,11 +26,29 @@
     <input asp-for="Salary" class="form-control" />
     <span class="text-danger" asp-validation-for="Salary"></span>
 </div>
+<div class="form-group">
+    <label asp-for="address" class="control-label"></label>
+    <input asp-for="address" class="form-control" />
+    <span class="text-danger" asp-validation-for="address"></span>
+</div>
+<div class="form-group"> 
+    <label asp-for="Department"></label>
+    <select class="form-control" asp-items="ViewBag.departments" asp-for="DepartmentId">
+        <option value="@null">Select Department</option>
+    </select>
+
+</div>
 
 <div class="form-group">
     <label asp-for="phone" class="control-label"></label>
     <input asp-for="phone" class="form-control" />
     <span class="text-danger" asp-validation-for="phone"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Image" class="control-label"></label>
+    <input asp-for="Image" class="form-control" />
+    <span class="text-danger" asp-validation-for="Image"></span>
 </div>
 
 <div class="form-group">

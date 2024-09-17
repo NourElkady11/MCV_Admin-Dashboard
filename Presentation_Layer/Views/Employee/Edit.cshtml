@@ -1,12 +1,13 @@
-﻿@model Employee
+﻿@model EmployeeViewModel
 @{
     ViewData["Title"] = "Edit";
 }
 
 <h1>Edit Employee</h1>
 
-<form method="post" asp-action="Edit">
+<form method="post" asp-action="Edit" enctype="multipart/form-data">
     <input hidden asp-for="Id"></input>
+    <input hidden asp-for="ImageName"></input>
 
 
     <partial name="Partial_Views/Create_Edit_Partial"></partial>

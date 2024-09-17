@@ -19,26 +19,23 @@ namespace BusniussLogic_Layer.Repositories
             dbset=context.Set<Tentity>();
         }
 
-        public int Create(Tentity entity)
+        public void Create(Tentity entity)
         {
              dbset.Add(entity);
-            return context.SaveChanges();
         }
 
-        public int Delete(Tentity entity)
+        public void Delete(Tentity entity)
         {
             dbset.Remove(entity);
-            return context.SaveChanges();
         }
 
         public Tentity? Get(int id) => dbset.Find(id);
         public IEnumerable<Tentity>? GetAll()=>dbset.ToList();
        
 
-        public int Update(Tentity entity)
+        public void Update(Tentity entity)
         {
             dbset.Update(entity);
-            return context.SaveChanges();
         }
     }
 }

@@ -17,5 +17,7 @@ namespace DataAccess_Layer.Models
         [Display(Name ="Created at")]
         public DateTime DateTime { get; set; }
 
+        public ICollection<Employee> employees { get; set; }=new List<Employee>();
+
     }
 }

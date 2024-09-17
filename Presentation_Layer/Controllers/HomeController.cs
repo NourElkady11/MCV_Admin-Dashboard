@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Presentation_Layer.Models;
+using Presentation_Layer.ViewModels;
 using System.Diagnostics;
 
 namespace Presentation_Layer.Controllers

@@ -8,10 +8,10 @@ namespace BusniussLogic_Layer.Repositories
 {
     public interface IGenaricRepository<TEntity>
     {
-        int Create(TEntity entity);
-        int Delete(TEntity entity);
+        void Create(TEntity entity);
+        void Delete(TEntity entity);
         TEntity? Get(int id);
         IEnumerable<TEntity>? GetAll();
-        int Update(TEntity entity);
+        void Update(TEntity entity);
     }
 }

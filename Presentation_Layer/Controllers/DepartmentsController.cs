@@ -1,4 +1,5 @@
-﻿using BusniussLogic_Layer.Repositories;
+﻿using AutoMapper;
+using BusniussLogic_Layer.Repositories;
 using DataAccess_Layer.Data;
 using DataAccess_Layer.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,15 +9,15 @@ namespace Presentation_Layer.Controllers
 {
     public class DepartmentsController : Controller
     {
-        private IDepartmentRepositorys departmentRepo;
+        private readonly IUnitOfWork unitOfWork;
 
-        public DepartmentsController(IDepartmentRepositorys departmentRepo)
+        public DepartmentsController(IUnitOfWork unitOfWork)
         {
-            this.departmentRepo = departmentRepo;
+            this.unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            var departments = departmentRepo.GetAll();
+            var departments = unitOfWork.Departments. GetAll();
             return View(departments);
         }
 
@@ -35,7 +36,8 @@ namespace Presentation_Layer.Controllers
             }
             else
             {
-                departmentRepo.Create(department);
+                unitOfWork.Departments.Create(department);
+                unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }       
         }
@@ -59,7 +61,8 @@ namespace Presentation_Layer.Controllers
             {
                 try
                 {
-                    departmentRepo.Update(department);
+                    unitOfWork.Departments.Update(department);
+                    unitOfWork.SaveChanges();
                    return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -81,7 +84,8 @@ namespace Presentation_Layer.Controllers
            
             try
             {
-                departmentRepo.Delete(department);
+                unitOfWork.Departments.Delete(department);
+                unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -98,8 +102,10 @@ namespace Presentation_Layer.Controllers
 
         private IActionResult EditandDelete(int? id, string viewname)
         {
+        
+
             if (!id.HasValue) return BadRequest();
-            var dept = departmentRepo.Get(id.Value);
+            var dept = unitOfWork.Departments.Get(id.Value);
             if (dept is null) return NotFound();
             return View(viewname, dept);
         }

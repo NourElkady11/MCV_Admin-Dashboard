@@ -1,0 +1,38 @@
+﻿using System.Drawing;
+
+namespace Presentation_Layer.Utilities
+{
+    public static class DocumentSetting
+    {
+        public static string uploadFile(IFormFile file, string foldername)
+        {
+            string Folderpath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Files");
+
+            string Filename = $"{Guid.NewGuid()}-{file.FileName}";
+
+            string FilePath= Path.Combine(Folderpath, Filename);
+
+            using var FileStream = new FileStream(FilePath, FileMode.Create);
+
+            file.CopyTo(FileStream);
+
+            return Filename;
+        }
+
+        public static void DeleteFile(string foldername, string filename)
+        {
+            string Filepath=Path.Combine(Directory.GetCurrentDirectory(),@"wwwroot\Files",foldername, filename);
+
+            if (File.Exists(Filepath))
+            {
+                File.Delete(Filepath);
+            }
+
+
+        }
+
+
+
+
+    }
+}
