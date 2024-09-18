@@ -130,7 +130,6 @@ namespace Presentation_Layer.Controllers
             {
                 var employee = mapper.Map<EmployeeViewModel, Employee>(Employee_View_Model);
                 unitOfWork.Employees.Delete(employee);
-                unitOfWork.SaveChanges();
                 if (unitOfWork.SaveChanges() > 0)
                 {
                     TempData["Message2"] = "Employee Deleted";

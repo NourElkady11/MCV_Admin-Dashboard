@@ -6,7 +6,7 @@ namespace Presentation_Layer.Utilities
     {
         public static string uploadFile(IFormFile file, string foldername)
         {
-            string Folderpath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Files");
+            string Folderpath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Files",foldername);
 
             string Filename = $"{Guid.NewGuid()}-{file.FileName}";
 
