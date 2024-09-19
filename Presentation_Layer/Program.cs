@@ -1,6 +1,7 @@
 using BusniussLogic_Layer.Repositories;
 using DataAccess_Layer.Data;
 using DataAccess_Layer.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -19,10 +20,13 @@ namespace Presentation_Layer
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
+             
 /*
             builder.Services.AddScoped<IEmployeeRepoistory,EmployeeRepository>();
             builder.Services.AddScoped<IDepartmentRepositorys, DepartmentRepositorys>();*/
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
             
             var app = builder.Build();
 

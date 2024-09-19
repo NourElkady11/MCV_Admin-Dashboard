@@ -74,7 +74,6 @@ namespace Presentation_Layer.Controllers
 
 
 
-
         public IActionResult Details(int? id) => EditandDelete(id, nameof(Details));
 
 
@@ -162,7 +161,7 @@ namespace Presentation_Layer.Controllers
             if (!id.HasValue) return BadRequest();
             var employee = unitOfWork.Employees.Get(id.Value);
             if (employee is null) return NotFound();
-            var EmployeeVM  = mapper.Map<Employee,EmployeeViewModel>(employee);
+            var EmployeeVM = mapper.Map<Employee, EmployeeViewModel>(employee);
             return View(viewname, EmployeeVM);
         }
 

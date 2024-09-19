@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess_Layer.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DataAccess_Layer.Data
 {
-    public class DataContext:DbContext
+    public class DataContext:IdentityDbContext<ApplicationUser>
     {
 
         /*  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -26,6 +27,7 @@ namespace DataAccess_Layer.Data
         public DbSet<Employee> Employees { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Employee>().Property(e => e.Salary).HasColumnType("decimal(18,5)");
         }
     }
