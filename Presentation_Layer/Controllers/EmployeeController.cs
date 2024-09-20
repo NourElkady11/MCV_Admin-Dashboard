@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusniussLogic_Layer.Repositories;
 using DataAccess_Layer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Presentation_Layer.Utilities;
@@ -8,9 +9,11 @@ using Presentation_Layer.ViewModels;
 
 namespace Presentation_Layer.Controllers
 {
+    [Authorize] 
+    //you must be user in the application to see the methods that exists here it will redirect you to the login page 
     public class EmployeeController : Controller
     {
-   
+         
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
 

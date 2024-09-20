@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Presentation_Layer.Utilities;
 using Presentation_Layer.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace Presentation_Layer.Controllers
 {
@@ -123,6 +125,74 @@ namespace Presentation_Layer.Controllers
 
 			return View(loginViewModel);
 		}
+
+
+		public IActionResult SignOut()
+		{
+			signInManager.SignOutAsync();
+			return RedirectToAction(nameof(Login));
+		}
+
+
+		public IActionResult ForgetPassword()
+		{
+				return View();
+		}
+
+
+		[HttpPost]
+		public IActionResult ForgetPassword(ForgetPasswordViewModel forgetPasswordViewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(forgetPasswordViewModel);
+
+			}
+			else
+			{
+				var user = userManager.FindByEmailAsync(forgetPasswordViewModel.Email).Result;
+				if(user is not null)
+				{
+					//Generating Token
+					var token=userManager.GeneratePasswordResetTokenAsync(user);
+					//Generating URl
+					var url = Url.Action(nameof(ResetPassword),"Account",new {email=forgetPasswordViewModel.Email,Token=token},Request.Scheme);
+					// Action-Controller - Route Values - Host&Protocol 
+					var email = new Mail()
+					{
+						Subject = "Ew3a tdos 3l link ha hackrak",
+						body=url,
+						Recipent=forgetPasswordViewModel.Email
+					};
+					MailSettings.SendEmail(email);
+
+					return RedirectToAction(nameof(CheckYourInbox));
+
+
+				}
+				else
+				{
+					ModelState.AddModelError("Email", "This email Dosent exist");
+				}
+
+			}
+			return View(forgetPasswordViewModel);
+
+		}
+
+		public IActionResult ResetPassword()
+		{
+			return View();
+		}
+
+
+		public IActionResult CheckYourInbox()
+		{
+			return View();
+		}
+
+
+
 	}
 
 

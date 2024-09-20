@@ -27,8 +27,9 @@ namespace Presentation_Layer
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
-            
-            var app = builder.Build();
+			//AddDefaultTokenProviders==> is for providing the tokens for ForgetPassword 
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
