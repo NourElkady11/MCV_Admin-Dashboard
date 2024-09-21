@@ -43,10 +43,9 @@ namespace Presentation_Layer.Controllers
 
         public IActionResult Create()
         {
-
-            var departments= unitOfWork.Departments.GetAll();
-            SelectList listItems = new SelectList(departments,"Id","Name");
-            ViewBag.departments=listItems;
+            var departments = unitOfWork.Departments.GetAll();
+            ViewBag.departmetns = departments;
+  
             //this (Id)=>DataValue filed we will send it to the view
             return View();
         }
@@ -157,9 +156,9 @@ namespace Presentation_Layer.Controllers
             if (viewname == nameof(Edit))
             {
                 var departments = unitOfWork.Departments.GetAll();
-                SelectList listItems = new SelectList(departments, "Id", "Name");
+                ViewBag.departmetns = departments;
+         /*       SelectList listItems = new SelectList(departments, "Id", "Name");*/
                 //this (Id)=>DataValue filed we will send it to the view and set as departmentId
-                ViewBag.departmetns = listItems;
             }
             if (!id.HasValue) return BadRequest();
             var employee = unitOfWork.Employees.Get(id.Value);
