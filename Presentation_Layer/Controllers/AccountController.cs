@@ -154,13 +154,13 @@ namespace Presentation_Layer.Controllers
 				if(user is not null)
 				{
 					//Generating Token
-					var token=userManager.GeneratePasswordResetTokenAsync(user);
+					var token=userManager.GeneratePasswordResetTokenAsync(user).Result;
 					//Generating URl
 					var url = Url.Action(nameof(ResetPassword),"Account",new {email=forgetPasswordViewModel.Email,Token=token},Request.Scheme);
 					// Action-Controller - Route Values - Host&Protocol 
 					var email = new Mail()
 					{
-						Subject = "Ew3a tdos 3l link ha hackrak",
+						Subject = "Reset your Password",
 						body=url,
 						Recipent=forgetPasswordViewModel.Email
 					};
@@ -180,16 +180,61 @@ namespace Presentation_Layer.Controllers
 
 		}
 
-		public IActionResult ResetPassword()
+		public IActionResult ResetPassword(string email,string token)
 		{
+			var stringToken=token?.ToString()??string.Empty;
+			var stringemail=email?.ToString()??string.Empty;
+			if (email is null || token is null)
+			{
+				return BadRequest();
+			}
+			else
+			{
+				TempData["stringemail"] =email;
+				TempData["stringToken"] =token;
+
+			}
+
 			return View();
+		}
+		[HttpPost]
+		public IActionResult ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+		{
+			resetPasswordViewModel.token = TempData["stringToken"]?.ToString();
+			resetPasswordViewModel.email = TempData["stringemail"]?.ToString();
+			if (!ModelState.IsValid)
+			{
+				return View(resetPasswordViewModel);
+			}
+			else
+			{
+				var user = userManager.FindByEmailAsync(resetPasswordViewModel.email).Result;
+				if (user != null)
+				{
+					var result = userManager.ResetPasswordAsync(user, resetPasswordViewModel.token, resetPasswordViewModel.Password).Result;
+					if (result.Succeeded) {
+						
+						return RedirectToAction(nameof(Login));
+					}
+					else
+					{
+						foreach (var error in result.Errors)
+						{
+							ModelState.AddModelError(string.Empty, error.Description);
+						}
+					}
+				}
+				else
+				{
+					ModelState.AddModelError(string.Empty, "User Not Found");
+				}
+				return View();
+			}
 		}
 
 
-		public IActionResult CheckYourInbox()
-		{
-			return View();
-		}
+		public IActionResult CheckYourInbox() => View();
+		
 
 
 
