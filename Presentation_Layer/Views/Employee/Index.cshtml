@@ -56,13 +56,10 @@
                     @if(@item.IsActive){
                         <i class="fa-solid fa-circle" style="color:green"></i>
                     }else{
-                    <i class="fa-solid fa-circle" style="color:red"></i>
-
+                        <i class="fa-solid fa-circle" style="color:red"></i>
                     }
                     </td>
-                  
-                    <partial name="Buttons_partial" model="item.Id"></partial>
-
+                    <partial name="Buttons_partial" model="item.Id.ToString()"></partial>
 
                    
                 </tr>
@@ -70,8 +67,6 @@
             }
 
         </tbody>
-
-
 
 
     </table>

@@ -1,4 +1,4 @@
-﻿@model EmployeeViewModel
+﻿@model RoleViewModel
 @{
     ViewData["Title"] = "Edit";
 }
@@ -7,10 +7,13 @@
 
 <form method="post" asp-action="Edit" enctype="multipart/form-data">
     <input hidden asp-for="Id"></input>
-    <input hidden asp-for="ImageName"></input>
 
 
     <partial name="Partial_Views/Create_Edit_Partial"></partial>
+    <div class="mt-2">
+        <a asp-action="AddOrRemoveUsers" class="btn btn-info"  asp-route-roleId="@Model.Id">Add Or Remove @Model.Name Role To Users</a>
+    </div>
+    <br/>
 
     <div class="form-group">
         <button class="btn btn-success" type="submit">Submit</button>

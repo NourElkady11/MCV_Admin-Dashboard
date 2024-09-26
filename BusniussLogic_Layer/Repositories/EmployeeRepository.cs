@@ -12,11 +12,11 @@ namespace BusniussLogic_Layer.Repositories
           
         }
 
-        public IEnumerable<Employee> GetAllEmployees(string name)
+        public async Task< IEnumerable<Employee>> GetAllEmployeesAsync(string name)
         {
-            return dbset.Where(e => e.Name.ToLower().Contains(name.ToLower())).Include(d=>d.Department).ToList();
+            return await dbset.Where(e => e.Name.ToLower().Contains(name.ToLower())).Include(d=>d.Department).ToListAsync();
         }
 
-        public IEnumerable<Employee> GetAllWithDepartment()=>dbset.Include(e => e.Department).ToList();
+        public async Task<IEnumerable<Employee>> GetAllWithDepartmentAsync()=> await dbset.Include(e => e.Department).ToListAsync();
     }
 }

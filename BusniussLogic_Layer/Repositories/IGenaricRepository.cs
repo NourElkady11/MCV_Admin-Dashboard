@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace BusniussLogic_Layer.Repositories
 {
-    public interface IGenaricRepository<TEntity>
+    public interface IGenaricRepository<TEntity> where TEntity: class
     {
-        void Create(TEntity entity);
+        Task CreateAsync(TEntity entity);
         void Delete(TEntity entity);
-        TEntity? Get(int id);
-        IEnumerable<TEntity>? GetAll();
+        Task<TEntity?> GetAsync(int id);
+        Task<IEnumerable<TEntity>>? GetAllAsync();
         void Update(TEntity entity);
     }
 }

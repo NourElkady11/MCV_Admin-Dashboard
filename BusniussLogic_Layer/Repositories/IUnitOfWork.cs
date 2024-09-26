@@ -11,6 +11,6 @@ namespace BusniussLogic_Layer.Repositories
         public IEmployeeRepoistory Employees { get; }
         public IDepartmentRepositorys Departments {get;}
 
-        public int SaveChanges();
+        public Task <int> SaveChangesAsync();
     }
 }

@@ -4,7 +4,7 @@ namespace Presentation_Layer.Utilities
 {
     public static class DocumentSetting
     {
-        public static string uploadFile(IFormFile file, string foldername)
+        public async static Task<string> uploadFile(IFormFile file, string foldername)
         {
             string Folderpath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Files",foldername);
 
@@ -14,7 +14,7 @@ namespace Presentation_Layer.Utilities
 
             using var FileStream = new FileStream(FilePath, FileMode.Create);
 
-            file.CopyTo(FileStream);
+            await file.CopyToAsync(FileStream);
 
             return Filename;
         }

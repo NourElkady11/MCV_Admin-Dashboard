@@ -22,18 +22,18 @@ namespace Presentation_Layer.Controllers
             this.unitOfWork = unitOfWork;
             this.mapper= mapper;
         }
-        public IActionResult Index(string searchValue)
+        public async Task<IActionResult> Index(string searchValue)
         {
             if (string.IsNullOrWhiteSpace(searchValue))
             {
 
-                  var Employees = unitOfWork.Employees.GetAllWithDepartment();
+                  var Employees = await unitOfWork.Employees.GetAllWithDepartmentAsync();
                   var EmployeeVM = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(Employees);
                   return View(EmployeeVM);
             }
             else
             {
-                var employees = unitOfWork.Employees.GetAllEmployees(searchValue);
+                var employees = await unitOfWork.Employees.GetAllEmployeesAsync(searchValue);
                 var EmployeeVM = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
                 return View(EmployeeVM);
 
@@ -41,9 +41,9 @@ namespace Presentation_Layer.Controllers
         }
 
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departments = unitOfWork.Departments.GetAll();
+            var departments =await unitOfWork.Departments.GetAllAsync();
             ViewBag.departmetns = departments;
   
             //this (Id)=>DataValue filed we will send it to the view
@@ -52,11 +52,11 @@ namespace Presentation_Layer.Controllers
 
 
         [HttpPost]
-        public IActionResult Create(EmployeeViewModel EmployeeViewModel)
+        public async Task<IActionResult> Create(EmployeeViewModel EmployeeViewModel)
         {
             if (EmployeeViewModel.Image is not null)
             {
-                EmployeeViewModel.ImageName=DocumentSetting.uploadFile(EmployeeViewModel.Image, "Images");
+                EmployeeViewModel.ImageName=await DocumentSetting.uploadFile(EmployeeViewModel.Image, "Images");
             }
             var employee = mapper.Map<EmployeeViewModel, Employee>(EmployeeViewModel);
 
@@ -68,21 +68,21 @@ namespace Presentation_Layer.Controllers
             else
             {
                
-                unitOfWork.Employees.Create(employee);
-                unitOfWork.SaveChanges();
+                await unitOfWork.Employees.CreateAsync(employee);
+                unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
         }
 
 
 
-        public IActionResult Details(int? id) => EditandDelete(id, nameof(Details));
+        public async Task<IActionResult> Details(int? id) =>await EditandDelete(id, nameof(Details));
 
 
 
-        public IActionResult Edit(int? id) => EditandDelete(id, nameof(Edit));
+        public async Task<IActionResult> Edit(int? id) =>await EditandDelete(id, nameof(Edit));
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Edit([FromForm] int id, EmployeeViewModel EmployeeViewModel)
+        public async Task<IActionResult> Edit([FromForm] int id, EmployeeViewModel EmployeeViewModel)
         {
             if (id != EmployeeViewModel.Id)
             {
@@ -91,7 +91,7 @@ namespace Presentation_Layer.Controllers
 
             if (EmployeeViewModel.Image is not null)
             {
-                EmployeeViewModel.ImageName = DocumentSetting.uploadFile(EmployeeViewModel.Image, "Images");
+                EmployeeViewModel.ImageName =await DocumentSetting.uploadFile(EmployeeViewModel.Image, "Images");
             }
       
             if (ModelState.IsValid)
@@ -100,7 +100,7 @@ namespace Presentation_Layer.Controllers
                 {
                     var employee = mapper.Map<EmployeeViewModel, Employee>(EmployeeViewModel);
                     unitOfWork.Employees.Update(employee);
-                    if (unitOfWork.SaveChanges()>0)
+                    if (await unitOfWork.SaveChangesAsync()>0)
                     {
                         TempData["Message"] = "Employee updated";
                     }
@@ -118,10 +118,10 @@ namespace Presentation_Layer.Controllers
         }
 
 
-        public IActionResult Delete(int? id) => EditandDelete(id, nameof(Delete));
+        public async Task<IActionResult> Delete(int? id) =>await EditandDelete(id, nameof(Delete));
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Delete(EmployeeViewModel Employee_View_Model)
+        public async Task< IActionResult> Delete(EmployeeViewModel Employee_View_Model)
         {
             if (Employee_View_Model.ImageName is not null)
             {
@@ -131,7 +131,7 @@ namespace Presentation_Layer.Controllers
             {
                 var employee = mapper.Map<EmployeeViewModel, Employee>(Employee_View_Model);
                 unitOfWork.Employees.Delete(employee);
-                if (unitOfWork.SaveChanges() > 0)
+                if (await unitOfWork.SaveChangesAsync() > 0)
                 {
                     TempData["Message2"] = "Employee Deleted";
                   
@@ -151,17 +151,17 @@ namespace Presentation_Layer.Controllers
 
 
 
-        private IActionResult EditandDelete(int? id, string viewname)
+        private async Task<IActionResult> EditandDelete(int? id, string viewname)
         {
             if (viewname == nameof(Edit))
             {
-                var departments = unitOfWork.Departments.GetAll();
+                var departments = await unitOfWork.Departments.GetAllAsync();
                 ViewBag.departmetns = departments;
          /*       SelectList listItems = new SelectList(departments, "Id", "Name");*/
                 //this (Id)=>DataValue filed we will send it to the view and set as departmentId
             }
             if (!id.HasValue) return BadRequest();
-            var employee = unitOfWork.Employees.Get(id.Value);
+            var employee = await unitOfWork.Employees.GetAsync(id.Value);
             if (employee is null) return NotFound();
             var EmployeeVM = mapper.Map<Employee, EmployeeViewModel>(employee);
             return View(viewname, EmployeeVM);

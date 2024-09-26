@@ -1,5 +1,7 @@
 ﻿using DataAccess_Layer.Data;
 using DataAccess_Layer.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -59,7 +61,7 @@ namespace Presentation_Layer.Controllers
 
                     if (Result.Succeeded)
                     {
-                        return RedirectToAction(nameof(Login));
+                        return RedirectToAction("Index","Home");
                     }
                     else
                     {
@@ -232,7 +234,27 @@ namespace Presentation_Layer.Controllers
 			}
 		}
 
+		public IActionResult GoogleLogin()
+		{
+			var prop = new AuthenticationProperties()
+			{
+				RedirectUri = Url.Action("GoogleResponse")
+			};
+			return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+		}
 
+		public async Task<IActionResult> GoogleResponse()
+		{
+			var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+			var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claims => new
+			{
+				claims.Issuer,
+				claims.OriginalIssuer,
+				claims.Type,
+				claims.Value
+			});
+			return RedirectToAction("Index","Home");
+		}
 		public IActionResult CheckYourInbox() => View();
 		
 

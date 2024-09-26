@@ -26,7 +26,8 @@ namespace BusniussLogic_Layer.Repositories
         public IDepartmentRepositorys Departments=> departmentRepoistory.Value;
 
 
-        public int SaveChanges()=>dataContext.SaveChanges();
-       
-    }
+        public async Task<int> SaveChangesAsync()=>await dataContext.SaveChangesAsync();
+
+		
+	}
 }

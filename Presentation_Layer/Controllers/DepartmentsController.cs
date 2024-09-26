@@ -15,9 +15,9 @@ namespace Presentation_Layer.Controllers
         {
             this.unitOfWork = unitOfWork;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var departments = unitOfWork.Departments. GetAll();
+            var departments = await unitOfWork.Departments.GetAllAsync();
             return View(departments);
         }
 
@@ -28,7 +28,7 @@ namespace Presentation_Layer.Controllers
 
 
         [HttpPost]
-        public IActionResult Create(Department department)
+        public async Task<IActionResult> Create(Department department)
         {
             if (!ModelState.IsValid)
             { 
@@ -36,8 +36,8 @@ namespace Presentation_Layer.Controllers
             }
             else
             {
-                unitOfWork.Departments.Create(department);
-                unitOfWork.SaveChanges();
+               await unitOfWork.Departments.CreateAsync(department);
+               await unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }       
         }
@@ -45,11 +45,11 @@ namespace Presentation_Layer.Controllers
 
        
        
-        public IActionResult Details(int? id)=> EditandDelete(id, nameof(Details));
+        public async Task<IActionResult> Details(int? id)=> await EditandDelete(id, nameof(Details));
 
 
 
-        public IActionResult Edit(int? id) => EditandDelete(id, nameof(Edit));
+        public async Task<IActionResult> Edit(int? id) => await EditandDelete(id, nameof(Edit));
         [HttpPost,ValidateAntiForgeryToken]
         public IActionResult Edit([FromForm]int id,Department department)
         {
@@ -62,7 +62,7 @@ namespace Presentation_Layer.Controllers
                 try
                 {
                     unitOfWork.Departments.Update(department);
-                    unitOfWork.SaveChanges();
+                    unitOfWork.SaveChangesAsync();
                    return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -76,7 +76,7 @@ namespace Presentation_Layer.Controllers
         }
 
 
-        public IActionResult Delete(int? id)=>EditandDelete(id, nameof(Delete));
+        public async Task<IActionResult> DeleteAsync(int? id)=>await EditandDelete(id, nameof(Delete));
 
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Delete(Department department)
@@ -85,7 +85,7 @@ namespace Presentation_Layer.Controllers
             try
             {
                 unitOfWork.Departments.Delete(department);
-                unitOfWork.SaveChanges();
+                unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -100,12 +100,12 @@ namespace Presentation_Layer.Controllers
 
 
 
-        private IActionResult EditandDelete(int? id, string viewname)
+        private async Task<IActionResult> EditandDelete(int? id, string viewname)
         {
         
 
             if (!id.HasValue) return BadRequest();
-            var dept = unitOfWork.Departments.Get(id.Value);
+            var dept = await unitOfWork.Departments.GetAsync(id.Value);
             if (dept is null) return NotFound();
             return View(viewname, dept);
         }

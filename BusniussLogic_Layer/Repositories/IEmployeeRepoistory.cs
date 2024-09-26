@@ -3,9 +3,9 @@ namespace BusniussLogic_Layer.Repositories
 {
     public interface IEmployeeRepoistory:IGenaricRepository<Employee>
     {
-        public IEnumerable<Employee> GetAllEmployees(string name);
+        public Task<IEnumerable<Employee>> GetAllEmployeesAsync(string name);
 
 
-        public IEnumerable<Employee> GetAllWithDepartment();
+        public Task< IEnumerable<Employee>> GetAllWithDepartmentAsync();
     }
 }

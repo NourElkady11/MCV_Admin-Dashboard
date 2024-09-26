@@ -1,0 +1,234 @@
+﻿using AutoMapper;
+using BusniussLogic_Layer.Repositories;
+using DataAccess_Layer.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Presentation_Layer.Utilities;
+using Presentation_Layer.ViewModels;
+
+namespace Presentation_Layer.Controllers
+{
+	[Authorize(Roles = "Admin")]
+	public class UserController : Controller
+	{
+		private readonly UserManager<ApplicationUser> userManager;
+
+		public UserController(UserManager<ApplicationUser> userManager)
+		{
+			this.userManager = userManager;
+		}
+
+
+
+		public async Task<IActionResult> Index(string email)
+		{
+			if (string.IsNullOrWhiteSpace(email))
+			{
+				var user = await userManager.Users.Select(user => new UserViewModel
+				{
+					Id = user.Id,
+					Email = user.Email,
+					FirstName = user.Firstname,
+					LastName = user.Lastname,
+					Username = user.UserName,
+					Roles = userManager.GetRolesAsync(user).GetAwaiter().GetResult()
+
+				}).ToListAsync();
+
+				return View(user);
+			}
+			else
+			{
+				var user = await userManager.FindByEmailAsync(email);
+				if (user is null)
+				{
+					return View(Enumerable.Empty<UserViewModel>);
+				}
+
+				var model = new UserViewModel()
+				{
+					Id = user.Id,
+					Email = user.Email,
+					FirstName = user.Firstname,
+					LastName = user.Lastname,
+					Roles = userManager.GetRolesAsync(user).GetAwaiter().GetResult()
+				};
+				List<UserViewModel> userViewModels = new List<UserViewModel>();
+				userViewModels.Add(model);
+				return View(userViewModels);
+
+			}
+		}
+		[HttpPost]
+		public async Task<IActionResult> Create(UserViewModel userViewModel)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(userViewModel);
+			}
+			else
+			{
+				try
+				{
+					var user = new ApplicationUser()
+					{
+
+						Firstname = userViewModel.FirstName,
+						Lastname = userViewModel.LastName,
+						UserName = userViewModel.Username,
+						Email = userViewModel.Email,
+
+					};
+					await userManager.CreateAsync(user);
+					return RedirectToAction(nameof(Index));
+				}
+				catch (Exception ex)
+				{
+					ModelState.AddModelError(string.Empty, ex.Message);
+				}
+
+
+
+			}
+				return View(userViewModel);
+		}
+
+
+
+
+			public async Task<IActionResult> Details(string id) => await UserHandler(id, nameof(Details));
+
+        public async Task<IActionResult> Edit(string id) => await UserHandler(id, nameof(Edit));
+
+		public async Task<IActionResult> Delete(string id) => await UserHandler(id, nameof(Delete));
+
+		public async Task<IActionResult> Create()
+		{
+			return View();
+		}
+
+
+		[HttpPost]
+		public async Task<IActionResult>Edit(string id,UserViewModel userViewModel)
+		{
+			if (id != userViewModel.Id)
+			{
+				return BadRequest();
+			}
+			else
+			{
+				if (!ModelState.IsValid)
+				{
+					return View(userViewModel);
+				}
+				else
+				{
+					try
+					{
+						var user = await userManager.FindByIdAsync(id);
+						if (user is null)
+						{
+							return BadRequest();
+						}
+						else
+						{
+							user.Firstname = userViewModel.FirstName;
+							user.Lastname = userViewModel.LastName;
+							await userManager.UpdateAsync(user);
+							return RedirectToAction(nameof(Index));
+
+						}
+					}
+					catch (Exception ex)
+					{
+						ModelState.AddModelError(string.Empty, ex.Message);
+/*						throw new Exception(ex.ToString());
+*/					}
+				}
+			}
+			return View(userViewModel);
+
+
+
+		}
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id, UserViewModel userViewModel)
+        {
+            if (id != userViewModel.Id)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(userViewModel);
+                }
+                else
+                {
+                    try
+                    {
+                        var user = await userManager.FindByIdAsync(id);
+                        if (user is null)
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            await userManager.DeleteAsync(user);
+                            return RedirectToAction(nameof(Index));
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                     
+                       
+                    }
+                }
+            }
+            return View(userViewModel);
+
+
+
+        }
+
+
+
+
+
+        public async Task<IActionResult> UserHandler(string id, string viewname)
+		{
+			if (string.IsNullOrWhiteSpace(id))
+			{
+				return BadRequest();
+			}
+			else
+			{
+				var user = await userManager.FindByIdAsync(id);
+				if (user is null) { return NotFound(); };
+				var model = new UserViewModel
+				{
+					Id = user.Id,
+					FirstName = user?.Firstname ?? string.Empty,
+					LastName = user?.Lastname ?? string.Empty,
+					Email = user?.Email,
+					Roles = userManager.GetRolesAsync(user).GetAwaiter().GetResult()
+
+				};
+				return View(viewname,model);
+					
+			}
+		}
+
+
+
+    }
+}

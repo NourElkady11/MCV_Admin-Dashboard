@@ -19,9 +19,9 @@ namespace BusniussLogic_Layer.Repositories
             dbset=context.Set<Tentity>();
         }
 
-        public void Create(Tentity entity)
+        public async Task CreateAsync(Tentity entity)
         {
-             dbset.Add(entity);
+           await dbset.AddAsync(entity);
         }
 
         public void Delete(Tentity entity)
@@ -29,13 +29,15 @@ namespace BusniussLogic_Layer.Repositories
             dbset.Remove(entity);
         }
 
-        public Tentity? Get(int id) => dbset.Find(id);
-        public IEnumerable<Tentity>? GetAll()=>dbset.ToList();
+        public async Task <Tentity?> GetAsync(int id) => await dbset.FindAsync(id);
+        public async Task<IEnumerable<Tentity>> GetAllAsync()=>await dbset.ToListAsync();
        
 
         public void Update(Tentity entity)
         {
             dbset.Update(entity);
         }
-    }
+
+	
+	}
 }
