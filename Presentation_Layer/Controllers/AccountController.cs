@@ -132,7 +132,7 @@ namespace Presentation_Layer.Controllers
 		public IActionResult SignOut()
 		{
 			signInManager.SignOutAsync();
-			return RedirectToAction(nameof(Login));
+			return RedirectToAction("Index", "Home");
 		}
 
 

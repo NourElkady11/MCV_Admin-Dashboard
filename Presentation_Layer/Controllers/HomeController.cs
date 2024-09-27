@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Presentation_Layer.Controllers
 {
-    [Authorize]
+   
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

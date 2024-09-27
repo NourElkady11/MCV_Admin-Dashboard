@@ -1,6 +1,8 @@
 using BusniussLogic_Layer.Repositories;
 using DataAccess_Layer.Data;
 using DataAccess_Layer.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,8 +36,9 @@ namespace Presentation_Layer
 
             builder.Services.AddAuthentication(option =>
             {
+        /*        option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 option.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;*/
             }).AddGoogle(options =>
             {
                 IConfiguration GoogleAuth = builder.Configuration.GetSection("Authentication:Google");
