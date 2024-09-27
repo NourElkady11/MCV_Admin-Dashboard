@@ -14,7 +14,6 @@ namespace Presentation_Layer.Controllers
         {
             _logger = logger;
         }
-
         public IActionResult Index()
         {
             return View();
