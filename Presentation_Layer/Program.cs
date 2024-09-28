@@ -32,6 +32,7 @@ namespace Presentation_Layer
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddIdentity<ApplicationUser,IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
+
             //AddDefaultTokenProviders==> is for providing the tokens for ForgetPassword and add the defult asccces denied path in the authorization proccess
             builder.Services.AddAuthentication(option =>
             {
