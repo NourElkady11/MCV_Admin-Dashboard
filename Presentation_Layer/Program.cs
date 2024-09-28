@@ -25,7 +25,6 @@ namespace Presentation_Layer
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
-             
 /*
             builder.Services.AddScoped<IEmployeeRepoistory,EmployeeRepository>();
             builder.Services.AddScoped<IDepartmentRepositorys, DepartmentRepositorys>();*/
