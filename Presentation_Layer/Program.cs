@@ -33,17 +33,17 @@ namespace Presentation_Layer
                 .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
 
             //AddDefaultTokenProviders==> is for providing the tokens for ForgetPassword and add the defult asccces denied path in the authorization proccess
-            builder.Services.AddAuthentication(option =>
+    /*        builder.Services.AddAuthentication(option =>
             {
-        /*        option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        *//*        option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 option.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;*/
+                option.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;*//*
             }).AddGoogle(options =>
             {
                 IConfiguration GoogleAuth = builder.Configuration.GetSection("Authentication:Google");
                 options.ClientId = GoogleAuth["ClientId"];
                 options.ClientSecret = GoogleAuth["ClientSecret"];
-            });
+            });*/
 
 
             builder.Services.ConfigureApplicationCookie(options =>
