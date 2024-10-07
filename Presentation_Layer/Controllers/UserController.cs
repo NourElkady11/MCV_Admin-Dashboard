@@ -23,8 +23,6 @@ namespace Presentation_Layer.Controllers
 			this.userManager = userManager;
 		}
 
-
-
 		public async Task<IActionResult> Index(string email)
 		{
 			if (string.IsNullOrWhiteSpace(email))
