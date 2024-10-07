@@ -46,15 +46,15 @@ namespace Presentation_Layer
             });*/
 
 
-            builder.Services.ConfigureApplicationCookie(options =>
+/*            builder.Services.ConfigureApplicationCookie(options =>
             {
-            /*    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
                 options.SlidingExpiration = true;
                 options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;*/
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
                 //for ovverident the authentication defult path
-            });
+            });*/
             var app = builder.Build();
             
             // Configure the HTTP request pipeline.
