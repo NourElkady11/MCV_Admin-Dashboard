@@ -21,7 +21,6 @@ namespace Presentation_Layer.Controllers
 
 		private readonly DataContext dataContext;
 
-
         public AccountController(UserManager<ApplicationUser> userManager, DataContext dataContext,SignInManager<ApplicationUser> signInManager)
         {
             this.userManager = userManager;
