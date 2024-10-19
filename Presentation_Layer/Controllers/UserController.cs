@@ -13,7 +13,7 @@ using Presentation_Layer.ViewModels;
 
 namespace Presentation_Layer.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin,SuperAdmin")]
 	public class UserController : Controller
 	{
 		private readonly UserManager<ApplicationUser> userManager;
@@ -48,15 +48,16 @@ namespace Presentation_Layer.Controllers
 					return View(Enumerable.Empty<UserViewModel>);
 				}
 
+				List<UserViewModel> userViewModels = new List<UserViewModel>();
 				var model = new UserViewModel()
 				{
 					Id = user.Id,
 					Email = user.Email,
 					FirstName = user.Firstname,
 					LastName = user.Lastname,
+					Username= user.UserName,
 					Roles = userManager.GetRolesAsync(user).GetAwaiter().GetResult()
 				};
-				List<UserViewModel> userViewModels = new List<UserViewModel>();
 				userViewModels.Add(model);
 				return View(userViewModels);
 
@@ -99,7 +100,7 @@ namespace Presentation_Layer.Controllers
 
 
 
-			public async Task<IActionResult> Details(string id) => await UserHandler(id, nameof(Details));
+	public async Task<IActionResult> Details(string id) => await UserHandler(id, nameof(Details));
 
         public async Task<IActionResult> Edit(string id) => await UserHandler(id, nameof(Edit));
 
@@ -217,6 +218,7 @@ namespace Presentation_Layer.Controllers
 					Id = user.Id,
 					FirstName = user?.Firstname ?? string.Empty,
 					LastName = user?.Lastname ?? string.Empty,
+					Username= user?.UserName ?? string.Empty,
 					Email = user?.Email,
 					Roles = userManager.GetRolesAsync(user).GetAwaiter().GetResult()
 

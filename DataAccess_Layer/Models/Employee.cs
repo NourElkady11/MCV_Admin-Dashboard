@@ -14,9 +14,9 @@ namespace DataAccess_Layer.Models
         public int Age { get; set; }
 
         public string Email { get; set; }
-     
+
         public decimal Salary { get; set; }
-     
+
         public string phone { get; set; }
 
         public string? address { get; set; }

@@ -33,11 +33,11 @@ namespace Presentation_Layer
                 .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
 
             //AddDefaultTokenProviders==> is for providing the tokens for ForgetPassword and add the defult asccces denied path in the authorization proccess
-    /*        builder.Services.AddAuthentication(option =>
+  /*          builder.Services.AddAuthentication(option =>
             {
-        *//*        option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                option.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 option.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;*//*
+                option.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
             }).AddGoogle(options =>
             {
                 IConfiguration GoogleAuth = builder.Configuration.GetSection("Authentication:Google");
@@ -46,15 +46,15 @@ namespace Presentation_Layer
             });*/
 
 
-/*            builder.Services.ConfigureApplicationCookie(options =>
-            {
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
-                options.SlidingExpiration = true;
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            /*            builder.Services.ConfigureApplicationCookie(options =>
+                        {
+                            options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+                            options.SlidingExpiration = true;
+                            options.Cookie.HttpOnly = true;
+                            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
-                //for ovverident the authentication defult path
-            });*/
+                            //for ovverident the authentication defult path
+                        });*/
             var app = builder.Build();
             
             // Configure the HTTP request pipeline.

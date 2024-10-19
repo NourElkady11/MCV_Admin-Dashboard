@@ -1,4 +1,5 @@
 ﻿using DataAccess_Layer.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using System.Data;
 
 namespace Presentation_Layer.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(/*AuthenticationSchemes =*/ Roles = "SuperAdmin")]
     public class RoleController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;

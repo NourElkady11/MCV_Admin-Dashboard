@@ -16,17 +16,17 @@ namespace Presentation_Layer.Controllers
          
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
-
         public EmployeeController(IMapper mapper, IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
             this.mapper= mapper;
         }
+
+
         public async Task<IActionResult> Index(string searchValue)
         {
             if (string.IsNullOrWhiteSpace(searchValue))
             {
-
                   var Employees = await unitOfWork.Employees.GetAllWithDepartmentAsync();
                   var EmployeeVM = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(Employees);
                   return View(EmployeeVM);
@@ -38,6 +38,11 @@ namespace Presentation_Layer.Controllers
                 return View(EmployeeVM);
 
             }
+
+
+
+
+
         }
 
 
@@ -45,7 +50,6 @@ namespace Presentation_Layer.Controllers
         {
             var departments =await unitOfWork.Departments.GetAllAsync();
             ViewBag.departmetns = departments;
-  
             //this (Id)=>DataValue filed we will send it to the view
             return View();
         }
@@ -59,7 +63,6 @@ namespace Presentation_Layer.Controllers
                 EmployeeViewModel.ImageName=await DocumentSetting.uploadFile(EmployeeViewModel.Image, "Images");
             }
             var employee = mapper.Map<EmployeeViewModel, Employee>(EmployeeViewModel);
-
 
             if (!ModelState.IsValid)
             {
